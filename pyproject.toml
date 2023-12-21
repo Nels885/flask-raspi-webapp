@@ -1,0 +1,29 @@
+[build-system]
+requires      = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flask-raspi-webapp"
+version = "0.0.1"
+description = "Web application for Raspberry Pi"
+readme = "README.md"
+authors = [{ name = "Lionel VOIRIN", email = "nels885@protonmail.com" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "flask==2.3.3",
+    "flask-restful",
+    "flask-redis-constance"
+]
+requires-python = ">=3.8"
+
+[project.urls]
+"Homepage" = "https://github.com/Nels885/flask-raspi-webapp"
+"Bug Tracker" = "https://github.com/Nels885/flask-raspi-webapp/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
