@@ -1,6 +1,7 @@
 import os
 import subprocess
 import click
+import jinja2
 from flask import Flask, Blueprint
 
 from constance import config
@@ -13,34 +14,44 @@ from .routes import main_bp
 
 class WebApp(object):
 
-    def __init__(self, app=None):
-        if app is not None:
+    def __init__(self, app: Flask = None):
+        if app:
             self.init_app(app)
 
-    def init_app(self, app):
-        app.config.setdefault('BOOTSTRAP_USE_MINIFIED', True)
-        app.config.setdefault('BOOTSTRAP_CDN_FORCE_SSL', False)
+    def init_app(self, app: Flask):
+        self.app = app
 
-        app.config.setdefault('BOOTSTRAP_QUERYSTRING_REVVING', True)
-        app.config.setdefault('BOOTSTRAP_SERVE_LOCAL', False)
+        print(app.jinja_loader)
+        my_loader = jinja2.ChoiceLoader([
+            jinja2.FileSystemLoader(['templates', 'webapp/templates']),
+        ])
+        self.app.jinja_loader = my_loader
 
-        app.config.setdefault('BOOTSTRAP_LOCAL_SUBDOMAIN', None)
+        self.blueprint = self.create_blueprint()
+        self.register_blueprint(self.blueprint)
+        self.register_blueprint(api_bp)
+        self.register_blueprint(main_bp)
 
+        self.context_processor(get_today_date)
+        self.context_processor(get_state_info)
+        self.context_processor(get_sys_info)
+        return self
+
+    def register_blueprint(self, blueprint: Blueprint):
+        self.app.register_blueprint(blueprint)
+
+    def context_processor(self, function: any):
+        self.app.context_processor(function)
+
+    def create_blueprint(self, url_prefix="/"):
         blueprint = Blueprint(
-            'webapp',
+            "webapp",
             __name__,
-            template_folder='templates',
-            static_folder='static',
-            static_url_path=app.static_url_path + '/webapp')
-
-        app.register_blueprint(blueprint)
-
-        app.register_blueprint(api_bp)
-        app.register_blueprint(main_bp)
-
-        app.context_processor(get_today_date)
-        app.context_processor(get_state_info)
-        app.context_processor(get_sys_info)
+            url_prefix=url_prefix,
+            template_folder="templates/webapp",
+            static_folder='static/webapp',
+        )
+        return blueprint
 
 
 def create_app(database_uri=None):
