@@ -21,9 +21,9 @@ class WebApp(object):
     def init_app(self, app: Flask):
         self.app = app
 
-        print(app.jinja_loader)
         my_loader = jinja2.ChoiceLoader([
-            jinja2.FileSystemLoader(['templates', 'webapp/templates']),
+            jinja2.FileSystemLoader(['templates']),
+            app.jinja_loader,
         ])
         self.app.jinja_loader = my_loader
 

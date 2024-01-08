@@ -1,0 +1,2 @@
+recursive-include webapp/static *
+recursive-include webapp/templates *.html

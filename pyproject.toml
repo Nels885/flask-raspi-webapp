@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "flask-raspi-webapp"
-version = "0.0.1"
+version = "0.0.4"
 description = "Web application for Raspberry Pi"
 readme = "README.md"
 authors = [{ name = "Lionel VOIRIN", email = "nels885@protonmail.com" }]
@@ -26,4 +26,4 @@ requires-python = ">=3.8"
 "Bug Tracker" = "https://github.com/Nels885/flask-raspi-webapp/issues"
 
 [tool.setuptools.packages.find]
-where = ["src"]
+include=["webapp"]
